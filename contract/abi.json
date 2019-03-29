@@ -1,0 +1,243 @@
+[
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_identificationId",
+				"type": "uint256"
+			},
+			{
+				"name": "_firstName",
+				"type": "string"
+			},
+			{
+				"name": "_lastName",
+				"type": "string"
+			}
+		],
+		"name": "addSignerAndSign",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_addressedTo",
+				"type": "string"
+			}
+		],
+		"name": "setAddressedTo",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getAddressedTo",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_signerId",
+				"type": "uint256"
+			}
+		],
+		"name": "getSigner",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "kill",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_identificationId",
+				"type": "uint256"
+			}
+		],
+		"name": "getSignatureIndexByIdentificationId",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getOwner",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "retractSign",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getSignaturesNumber",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getRetractedSignaturesIndex",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "_signerAddress",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"name": "_identificationId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "_firstName",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "_lastname",
+				"type": "string"
+			}
+		],
+		"name": "PetitionSigned",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "_addressedTo",
+				"type": "string"
+			}
+		],
+		"name": "SetAddressedTo",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "_retractedAddress",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"name": "signatureIndex",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "_identificationId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "firstName",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "lastName",
+				"type": "string"
+			}
+		],
+		"name": "SignatureRetracted",
+		"type": "event"
+	}
+]

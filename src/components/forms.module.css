@@ -1,0 +1,15 @@
+.card {
+  margin-bottom: 20px;
+}
+
+.form {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.textField {
+  display: flex;
+  flex: 1;
+  min-width: 200px !important;
+  margin: 10px !important;
+}

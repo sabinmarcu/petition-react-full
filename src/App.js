@@ -1,28 +1,31 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { observer, useObservable } from 'mobx-react-lite';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
-}
+import './index.css';
 
-export default App;
+import NavBar from './components/NavBar';
+import { Layout, Sidebar, Content } from './components/Layout';
+import UserProfile from './components/UserProfile';
+import OwnerPanel from './components/OwnerPanel';
+import Notifications from './components/Notifications';
+
+import AppStore from './mobx/app';
+
+const AppRoot = () => {
+  const { isOwner, isOnline } = useObservable(AppStore);
+  return (
+    <>
+      <NavBar />
+      <Layout>
+        <Sidebar>
+          <UserProfile />
+          {isOnline && isOwner && <OwnerPanel />}
+        </Sidebar>
+        <Content>Content</Content>
+      </Layout>
+      <Notifications />
+    </>
+  );
+};
+
+export default observer(AppRoot);
