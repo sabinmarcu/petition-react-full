@@ -12,6 +12,10 @@ export const Layout = ({ children }) => (
   </section>
 );
 
+export const FullWidth = ({ children }) => (
+  <section className={style.fullWidth}>{children}</section>
+);
+
 export const Sidebar = ({ children }) => (
   <section className={style.sidebar}>{children}</section>
 );

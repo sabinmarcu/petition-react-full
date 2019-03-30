@@ -1,7 +1,6 @@
 import { observable, computed, action } from 'mobx';
 import web3 from '../shims/web3';
 
-import { contractAddress } from '../data/constants.json';
 import abi from '../data/abi.json';
 
 import { wrapCall, wrapSubscription } from './utils';
@@ -11,12 +10,16 @@ class ContractStore {
 
   @computed get isOnline() { return !!this.contract; }
 
-  constructor() {
-    this.connect();
+  @computed get address() {
+    if (this.contract) {
+      return this.contract.address;
+    }
+    return null;
   }
 
-  @action async connect() {
-    this.contract = await web3.eth.contract(abi).at(contractAddress);
+  @action async connect(address) {
+    this.contract = null;
+    this.contract = await web3.eth.contract(abi).at(address);
   }
 
   @action async executeCommand(command, ...args) {

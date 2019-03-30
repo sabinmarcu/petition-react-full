@@ -20,7 +20,7 @@ const UserProfile = () => {
     <Card raised={focusState} className={style.card}>
       <CardHeader
         title="User Profile"
-        subheader={fullname.length > 1 && fullname}
+        subheader={fullname.length > 1 ? fullname : 'Please enter your name'}
       />
       <CardContent className={style.form}>
         <TextField

@@ -1,5 +1,4 @@
 {
-  "contractAddress": "0x7C6A745346EE15b5162a13CA936d49Af93d245Fe",
   "persistKeys": {
     "identificationId": "dapp:id",
     "name": "dapp:user:name",

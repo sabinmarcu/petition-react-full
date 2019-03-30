@@ -37,7 +37,10 @@ const OwnerPanel = () => {
       <Card raised={focusState} className={style.card}>
         <CardHeader
           title="Owner Panel"
-          subheader="If you're seeing this, you're the owner"
+          subheader={name && name.length > 0
+            ? 'Change Petition Name'
+            : 'Set Petition Name'
+          }
         />
         <CardContent className={style.form}>
           <TextField
