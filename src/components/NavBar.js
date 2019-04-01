@@ -10,12 +10,14 @@ import {
 import AppStore from '../mobx/app';
 import AccountMenu from './AccountMenu';
 
+import style from './NavBar.module.css';
+
 const NavBar = () => {
   const {
     title,
   } = useObservable(AppStore);
   return (
-    <AppBar>
+    <AppBar position="static" style={style.navBar}>
       <Toolbar>
         <AccountMenu />
         <Typography

@@ -15,6 +15,10 @@ const NotificationsComponent = () => {
         setText('Petition name changed!');
         setOpen(true);
       });
+      PetitionStore.subscribeToPetitionSign(({ args: { _name, _lastname } }) => {
+        setText(`Petition Signed (${_name}, ${_lastname})!`);
+        setOpen(true);
+      });
     }
   }, [contractIsOnline]);
 

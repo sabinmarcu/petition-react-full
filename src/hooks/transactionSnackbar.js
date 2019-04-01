@@ -20,11 +20,13 @@ export default (defaultValue = false) => {
     />
   );
   const setExpiration = (duration = 1000) => setHideDuration(duration);
-  const onSuccess = () => {
+  const onSuccess = (...args) => {
+    console.log(...args);
     setText('Transaction approved');
     setExpiration();
   };
-  const onError = () => {
+  const onError = (...args) => {
+    console.error(...args);
     setText('Transaction declined');
     setExpiration();
   };

@@ -8,7 +8,6 @@ import {
 import AccountStore from './account';
 import ContractStore from './contract';
 import UserProfileStore from './user';
-import PersistStore from './persist';
 
 const signerDecoder = ([
   address,
@@ -16,7 +15,9 @@ const signerDecoder = ([
   name,
   lastname,
   retractedSignature,
-]) => ({
+]) => console.log('DECODING', {
+  address, id, name, lastname, retractedSignature,
+}) || ({
   address,
   name,
   lastname,
@@ -38,14 +39,14 @@ class PetitionStore {
   @observable identificationId = null;
 
   @computed get hasSigned() {
-    return !!this.identificationId;
+    return this.identificationId != null;
   }
+
+  @observable signaturesCount: -1;
+
+  @observable retractedCount: -1;
 
   @observable signatures = [];
-
-  @computed get filteredSignatures() {
-    return this.signatures.slice(0, 1);
-  }
 
   constructor() {
     reaction(() => this.contract.isOnline, async () => {
@@ -55,37 +56,23 @@ class PetitionStore {
         this.subscribeToPetitionNameChange(({ args: { _addressedTo } }) => {
           this.name = _addressedTo;
         });
-        const signatureCount = (await this.getSignatureCount()).toNumber();
-        this.signatures = (await Promise.all(
-          (new Array(signatureCount))
-            .fill(0)
-            .map(async (_, index) => this.getSigner(
-              await this.getSignatureIndexByIdentificationId(index),
-            )),
-        )).map(signerDecoder);
-        this.tryAndGetIdentificationId();
-      }
-    });
-    reaction(() => this.identificationId, () => {
-      if (this.identificationId != null) {
-        PersistStore.setItem(
-          'identificationId',
-          this.identificationId,
-        );
+        await this.reactToSignatureChange();
+        this.subscribeToPetitionSign(this.reactToSignatureChange);
+        this.subscribeToSignatureRetracted(this.reactToSignatureChange);
       }
     });
     reaction(() => ({
       account: this.account.primaryAccount,
-      contract: this.contract.address,
     }), this.tryAndGetIdentificationId);
   }
 
+  @action reactToSignatureChange = async () => {
+    await this.refreshSignatures();
+    return this.tryAndGetIdentificationId();
+  }
+
   @action tryAndGetIdentificationId = async () => {
-    this.identificationId = PersistStore.getItem('identificationId');
-    console.log('Got identificationId', this.identificationId);
-    console.log(this.signatures);
     if (this.signatures.length > 0) {
-      console.log('Crawling through signatures');
       const signer = this.signatures.find(
         ({ address }) => address === this.account.primaryAccount,
       );
@@ -93,12 +80,32 @@ class PetitionStore {
         this.identificationId = signer.id;
         this.userProfile.name = signer.name;
         this.userProfile.lastname = signer.lastname;
+      } else {
+        this.identificationId = null;
+        this.userProfile.name = null;
+        this.userProfile.lastname = null;
       }
     }
   }
 
+  @action refreshSignatures = async () => {
+    await this.refreshSignaturesCount();
+    this.signatures = (await Promise.all(
+      (new Array(this.signaturesCount))
+        .fill(0)
+        .map(async (_, index) => this.getSigner(
+          await this.getSignatureIndexByIdentificationId(index),
+        )),
+    )).map(signerDecoder);
+  }
+
   @action refreshPetition = async () => {
     this.name = await this.getPetitionName();
+  }
+
+  @action refreshSignaturesCount = async () => {
+    this.signaturesCount = (await this.getSignatureCount()).toNumber();
+    this.retractedCount = (await this.getRetractedCount()).toNumber();
   }
 
   @action getOwner = async () => this.contract.executeCommand('getOwner');
@@ -115,23 +122,52 @@ class PetitionStore {
 
   @action addSignerAndSign = async (id, name, lastname) => this.contract.executeCommand('addSignerAndSign', id, name, lastname)
 
+  @action retractSign = async () => this.contract.executeCommand('retractSign')
+
+  @action getRetractedCount = async () => this.contract.executeCommand('getRetractedSignaturesIndex')
+
   @action signPetition = async () => {
     if (this.identificationId) {
       throw new Error('You have already signed this petition!');
     }
-    this.identificationId = await this.getSignatureCount();
+    const signatureCount = await this.getSignatureCount();
     return this.addSignerAndSign(
-      this.identificationId,
+      signatureCount,
       this.userProfile.name,
       this.userProfile.lastname,
     );
   }
+
+  @action retractSignature = async () => {
+    if (!this.identificationId) {
+      throw new Error('You must have signed the petition to retract it!');
+    }
+    return this.retractSign();
+  }
+
+  @action subscribeToPetitionSign = (
+    successHandler,
+    errorHandler,
+  ) => this.contract.subscribeToEvent(
+    'PetitionSigned',
+    successHandler,
+    errorHandler,
+  )
 
   @action subscribeToPetitionNameChange = (
     successHandler,
     errorHandler,
   ) => this.contract.subscribeToEvent(
     'SetAddressedTo',
+    successHandler,
+    errorHandler,
+  );
+
+  @action subscribeToSignatureRetracted = (
+    successHandler,
+    errorHandler,
+  ) => this.contract.subscribeToEvent(
+    'SignatureRetracted',
     successHandler,
     errorHandler,
   );

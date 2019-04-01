@@ -1,8 +1,8 @@
 .layout {
-  width: 100%;
-  height: 100%;
-  padding-top: 100px;
+  flex: 1;
+  padding-top: 50px;
   box-sizing: border-box;
+  overflow-y: auto;
 }
 .layout .wrapper {
   max-width: 1200px;

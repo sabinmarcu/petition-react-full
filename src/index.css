@@ -5,3 +5,7 @@ html, body, #root {
   overflow: hidden;
   font-family: 'Roboto';
 }
+#root {
+  display: flex;
+  flex-flow: column nowrap;
+}

@@ -46,7 +46,7 @@ const OwnerPanel = () => {
           <TextField
             className={style.textField}
             type="text"
-            label="First Name"
+            label="Petition Name"
             value={tempPetitionName || ''}
             inputProps={{
               onFocus,
