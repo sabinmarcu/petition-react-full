@@ -7,24 +7,26 @@ import {
   Typography,
 } from '@material-ui/core';
 
-import AppStore from '../mobx/app';
-import AccountMenu from './AccountMenu';
-
+import AccountStore from '../mobx/account';
+import PetitionStore from '../mobx/petition';
 import style from './NavBar.module.css';
 
 const NavBar = () => {
-  const {
-    title,
-  } = useObservable(AppStore);
+  const { isOnline, primaryAccount } = useObservable(AccountStore);
+  const { name } = useObservable(PetitionStore);
+  const title = name ? `Addressed To: ${name}` : 'DApps with React';
   return (
-    <AppBar position="static" style={style.navBar}>
+    <AppBar position="static" className={style.navBar}>
       <Toolbar>
-        <AccountMenu />
         <Typography
           variant="h6"
           color="inherit"
+          className={style.title}
         >
           {title}
+        </Typography>
+        <Typography color="white" className={style.account}>
+          {isOnline ? primaryAccount : 'Not Connected'}
         </Typography>
       </Toolbar>
     </AppBar>
